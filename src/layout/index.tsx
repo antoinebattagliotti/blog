@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
                 <title>My Blog</title>
             </head>
 
-            <body>{children}</body>
+            <body class={'min-h-svh w-screen overflow-hidden'}>{children}</body>
         </html>
     )
 }

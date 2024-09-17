@@ -17,7 +17,9 @@ envSchema.parse(Bun.env)
 app.get('/', (c) => {
     return c.html(
         <Layout>
-            <div class={'bg-slate-200 text-red-500'}>Hello</div>
+            <div class={'bg-slate-200 text-red-500'}>
+                Welcome to my personal portfolio
+            </div>
         </Layout>
     )
 })

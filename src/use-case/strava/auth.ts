@@ -59,21 +59,29 @@ async function getAccessTokenFromClientCode(): Promise<string> {
 }
 
 async function getAccessTokenFromRefreshToken(): Promise<string> {
+    // Get from cache the refresh token
+    const refreshToken = await redisClient.get(STRAVA_REFRESH_TOKEN_KEY)
+
+    if (!refreshToken) {
+        throw new Error('Failed to get refresh token from cache')
+    }
+
     // Build the URL to auth to Strava
     const url = new URL(Bun.env.STRAVA_AUTH_URL)
     url.searchParams.append('client_id', Bun.env.STRAVA_CLIENT_ID.toString())
     url.searchParams.append('client_secret', Bun.env.STRAVA_CLIENT_SECRET)
     url.searchParams.append('grant_type', 'refresh_token')
     url.searchParams.append('refresh_token', 'ReplaceWithRefreshToken')
-    url.searchParams.append('refresh_token', 'todo')
+    url.searchParams.append('refresh_token', refreshToken)
 
     const response = await fetch(url, {
         method: 'POST',
         redirect: 'follow',
     })
 
-    if (!response.ok)
+    if (!response.ok) {
         throw new Error('Failed to get access token from refresh token')
+    }
 
     // Get the JSON
     const json = await response.json()
@@ -97,8 +105,9 @@ export async function getAccessToken(): Promise<string> {
 
     const accessToken = await redisClient.get(STRAVA_ACCESS_TOKEN_KEY)
 
-    if (!accessToken)
-        throw new Error('Failed to get access token from Redis client')
+    if (!accessToken) {
+        return await getAccessTokenFromRefreshToken()
+    }
 
     return accessToken
 }
