@@ -15,7 +15,17 @@ export default function Layout({ children }: { children: JSX.Element }) {
                 <title>My Blog</title>
             </head>
 
-            <body class={'min-h-svh w-screen overflow-hidden'}>{children}</body>
+            <body
+                class={
+                    'min-h-svh w-screen overflow-hidden flex flex-col space-y-4 bg-white'
+                }
+            >
+                <header>antoine</header>
+
+                <a href={'/strava'}>Strava</a>
+
+                <main class={'grow'}>{children}</main>
+            </body>
         </html>
     )
 }
