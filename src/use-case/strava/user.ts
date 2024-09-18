@@ -2,8 +2,15 @@
 import { z } from 'zod'
 import { ActivityStravaSchema, ActivityStravaType } from '@/schema/strava'
 import { getAccessToken } from '@/use-case/strava/auth'
+import { redisClient } from '@/lib/redis'
+import { STRAVA_ACTIVITIES_KEY } from '@/constants/cache'
 
 export async function getActivities(): Promise<ActivityStravaType[]> {
+    const cachedActivities = await redisClient.get(STRAVA_ACTIVITIES_KEY)
+
+    if (cachedActivities)
+        return JSON.parse(cachedActivities) as ActivityStravaType[]
+
     // Get a token
     const token = await getAccessToken()
 
@@ -34,10 +41,16 @@ export async function getActivities(): Promise<ActivityStravaType[]> {
         throw new Error('Failed to parse JSON response from Strava activities')
     }
 
-    // Return the activities sorted by start date desc
-    return parsedJson.data.sort(
+    const activities = parsedJson.data.sort(
         (a, b) => b.start_date.getTime() - a.start_date.getTime()
     )
+
+    await redisClient.set(STRAVA_ACTIVITIES_KEY, JSON.stringify(activities), {
+        EX: 60 * 60,
+    })
+
+    // Return the activities sorted by start date desc
+    return activities
 }
 
 // TODO Explain sort function in TS
