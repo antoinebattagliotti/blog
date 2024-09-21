@@ -17,14 +17,30 @@ export default function Layout({ children }: { children: JSX.Element }) {
 
             <body
                 class={
-                    'min-h-svh w-screen overflow-hidden flex flex-col space-y-4 bg-white'
+                    'min-h-svh w-screen overflow-hidden flex flex-col space-y-4 px-24 pt-24 pb-8 bg-white'
                 }
             >
-                <header>antoine</header>
+                <header
+                    class={
+                        'w-full flex items-center justify-start space-x-4 text-xs'
+                    }
+                >
+                    <a href={'/'} class={'mr-auto'}>
+                        antoine
+                    </a>
 
-                <a href={'/strava'}>Strava</a>
+                    <a href={'/use-case'}>use-case</a>
 
-                <main class={'grow'}>{children}</main>
+                    <a href={'/strava'}>strava</a>
+
+                    <a href={'/inspiration'}>inspiration</a>
+                </header>
+
+                <main class={'grow bg-red-50 text-red-800 text-sm'}>
+                    {children}
+                </main>
+
+                <footer class={'text-xs'}>Developed by me.</footer>
             </body>
         </html>
     )
