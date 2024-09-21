@@ -5,12 +5,24 @@ import { getAccessToken } from '@/use-case/strava/auth'
 import { redisClient } from '@/lib/redis'
 import { STRAVA_ACTIVITIES_KEY } from '@/constants/cache'
 
+/*
+    FIRST
+        Check if the activities are cached, if yes return the cached value
+    ELSE
+        Get an access token from Strava
+        Call Strava route to get my activities
+        Safe parse the response with Zod
+        Cache the activities for two hours
+        Return the activities
+ */
 export async function getActivities(): Promise<ActivityStravaType[]> {
     const cachedActivities = await redisClient.get(STRAVA_ACTIVITIES_KEY)
 
+    // If the activities are cached, just return them directly from cache
     if (cachedActivities)
         return JSON.parse(cachedActivities) as ActivityStravaType[]
 
+    // From here, activities are not cached, process with strava auth and custom api
     // Get a token
     const token = await getAccessToken()
 
@@ -46,7 +58,7 @@ export async function getActivities(): Promise<ActivityStravaType[]> {
     )
 
     await redisClient.set(STRAVA_ACTIVITIES_KEY, JSON.stringify(activities), {
-        EX: 60 * 60,
+        EX: 2 * 60 * 60,
     })
 
     // Return the activities sorted by start date desc
