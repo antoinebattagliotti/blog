@@ -15,12 +15,20 @@ const app = new Hono()
 envSchema.parse(Bun.env)
 
 // Main route
-app.get('/', (c) => {
+app.get('/', async (c) => {
+    const activities = await getActivities()
+
+    const distanceSum = activities.reduce((acc, activity) => {
+        if (typeof activity.distance === 'string') return acc
+
+        return acc + activity.distance
+    }, 0)
+
     return c.html(
         <Layout>
             <div class={'flex items-center h-full'}>
                 Welcome to my personal portfolio, or as I like to call it, the
-                work in progress page...
+                work in progress page... I have run {distanceSum.toFixed(2)}
             </div>
         </Layout>
     )

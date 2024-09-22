@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
                 />
                 <script src="https://unpkg.com/htmx.org@2.0.2"></script>
                 <script src="https://cdn.tailwindcss.com"></script>
-                <title>My Blog</title>
+                <title>awb-studio</title>
             </head>
 
             <body
