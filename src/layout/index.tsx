@@ -1,6 +1,12 @@
 import { JSX } from 'hono/dist/types/jsx/base'
 
 export default function Layout({ children }: { children: JSX.Element }) {
+    // Get the current month and year for footer
+    const currentDate = new Date().toLocaleDateString('default', {
+        month: 'short',
+        year: '2-digit',
+    })
+
     return (
         <html lang={'en'}>
             <head>
@@ -15,32 +21,68 @@ export default function Layout({ children }: { children: JSX.Element }) {
                 <title>awb-studio</title>
             </head>
 
-            <body
-                class={
-                    'min-h-svh w-screen overflow-hidden flex flex-col space-y-4 px-24 pt-24 pb-8 bg-white'
-                }
-            >
+            <body class={'min-h-svh w-screen'}>
                 <header
                     class={
-                        'w-full flex items-center justify-start space-x-4 text-xs'
+                        'fixed top-0 left-0 w-full px-6 py-1 flex items-center justify-start space-x-4 text-xs'
                     }
                 >
-                    <a href={'/'} class={'mr-auto'}>
+                    <a href={'/'} class={'mr-auto cursor-pointer'}>
                         antoine
                     </a>
 
-                    <a href={'/use-case'}>use-case</a>
+                    <a href={'/use-case'} class={'cursor-pointer'}>
+                        work
+                    </a>
 
-                    <a href={'/strava'}>strava</a>
+                    <a href={'/strava'} class={'cursor-pointer'}>
+                        trail
+                    </a>
 
-                    <a href={'/inspiration'}>inspiration</a>
+                    <a href={'/inspiration'} class={'cursor-pointer'}>
+                        inspiration
+                    </a>
                 </header>
 
-                <main class={'grow bg-red-50 text-red-800 text-sm'}>
+                <main
+                    class={
+                        'min-h-full flex items-center px-6 text-red-800 text-xs'
+                    }
+                >
                     {children}
                 </main>
 
-                <footer class={'text-xs'}>Developed by me.</footer>
+                <footer
+                    class={
+                        'fixed bottom-0 left-0 w-full px-6 py-1 text-xs italic flex justify-between uppercase'
+                    }
+                >
+                    <a
+                        href={'https://www.google.com'}
+                        target={'_blank'}
+                        class={'cursor-pointer'}
+                    >
+                        Email
+                    </a>
+
+                    <a
+                        href={'https://www.google.com'}
+                        target={'_blank'}
+                        class={'cursor-pointer'}
+                    >
+                        LinkedIn
+                    </a>
+
+                    <a
+                        href={'https://www.google.com'}
+                        target={'_blank'}
+                        class={'cursor-pointer'}
+                    >
+                        Strava
+                    </a>
+
+                    <div>{currentDate}</div>
+                </footer>
             </body>
         </html>
     )
